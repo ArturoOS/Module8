@@ -62,7 +62,7 @@
     <Build Include="Address.sql" />
     <Build Include="Employee.sql" />
     <Build Include="Company.sql" />
-    <Build Include="EmployeeInfo.sql" />
+    <Build Include="EmployeeViewInfo.sql" />
     <Build Include="SPInsertEmployeeInfo.sql" />
   </ItemGroup>
   <ItemGroup>
