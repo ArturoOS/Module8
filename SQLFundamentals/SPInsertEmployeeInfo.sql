@@ -11,12 +11,32 @@
 AS
 	
 	INSERT INTO Person
-	VALUES (@FirstName,@LastName); 
+	VALUES 
+	(
+		CASE
+		WHEN @FirstName IS NOT NULL AND CHARINDEX(' ',@EmployeeName) = 0 THEN @EmployeeName
+		ELSE '' 
+		END,
+		CASE
+		WHEN @LastName IS NOT NULL AND CHARINDEX(' ',@LastName) = 0 THEN @LastName
+		ELSE '' 
+		END
+	); 
 
 	INSERT INTO Address
 	VALUES (@Street,@City,@State,@ZipCode); 
 
 	INSERT INTO Employee
-	VALUES (IDENT_CURRENT('Address'),IDENT_CURRENT('Person'),@CompanyName,@Position,@EmployeeName); 
+	VALUES 
+	(
+		IDENT_CURRENT('Address'),
+		IDENT_CURRENT('Person'),
+		LEFT(@CompanyName,20),
+		@Position,
+		CASE
+		WHEN @EmployeeName IS NOT NULL AND CHARINDEX(' ',@EmployeeName) = 0 THEN @EmployeeName
+		ELSE '' 
+		END
+	); 
 
 RETURN 0
