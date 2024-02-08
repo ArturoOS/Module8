@@ -9,34 +9,36 @@
 	@State nvarchar(20) = NULL,
 	@ZipCode nvarchar(20) = NULL
 AS
-	
-	INSERT INTO Person
-	VALUES 
-	(
-		CASE
-		WHEN @FirstName IS NOT NULL AND CHARINDEX(' ',@EmployeeName) = 0 THEN @EmployeeName
-		ELSE '' 
-		END,
-		CASE
-		WHEN @LastName IS NOT NULL AND CHARINDEX(' ',@LastName) = 0 THEN @LastName
-		ELSE '' 
-		END
-	); 
+    --A FUNCTIONS IS A BETTER SOLUTION:
+	--CREATE FUNCTION Validate(@StringToCheck nvachar(20))
+	--RETURNS BOOLEAN
+	--AS
+	--BEGIN
+	--DECLARE
+	--@Validation BOOLEAN
+	--SET @Validation=@StringToCheck IS NOT NULL AND @StringToCheck != '' AND @StringToCheck NOT LIKE '% %'
+	--RETURN @Validation
+	--END
+	IF ((@FirstName IS NOT NULL AND @FirstName != '' AND @FirstName NOT LIKE '% %')OR
+		(@FirstName IS NOT NULL AND @FirstName != '' AND @FirstName NOT LIKE '% %')OR
+		(@EmployeeName IS NOT NULL AND @EmployeeName != '' AND @EmployeeName NOT LIKE '% %'))
+	BEGIN
+		INSERT INTO Person 
+		VALUES (@FirstName,@LastName); 
 
-	INSERT INTO Address
-	VALUES (@Street,@City,@State,@ZipCode); 
+		INSERT INTO Address
+		VALUES (@Street,@City,@State,@ZipCode); 
 
-	INSERT INTO Employee
-	VALUES 
-	(
-		IDENT_CURRENT('Address'),
-		IDENT_CURRENT('Person'),
-		LEFT(@CompanyName,20),
-		@Position,
-		CASE
-		WHEN @EmployeeName IS NOT NULL AND CHARINDEX(' ',@EmployeeName) = 0 THEN @EmployeeName
-		ELSE '' 
-		END
-	); 
+		INSERT INTO Employee
+		VALUES 
+		(
+			IDENT_CURRENT('Address'),
+			IDENT_CURRENT('Person'),
+			LEFT(@CompanyName,20),
+			@Position,
+			@EmployeeName
+		); 
+	END
 
 RETURN 0
+
